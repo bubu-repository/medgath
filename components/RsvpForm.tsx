@@ -71,12 +71,29 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      if (res.ok && data.ticket_hash) {
-        const flag = data.already_registered ? "?existing=1" : "";
-        router.push(`/ticket/${data.ticket_hash}${flag}`);
+
+      let data;
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        console.error("Failed to parse response:", parseErr);
+        setServerError("Invalid server response. Please try again.");
+        setSubmitting(false);
         return;
       }
+
+      if (res.ok && data.ticket_hash) {
+        const flag = data.already_registered ? "?existing=1" : "";
+        try {
+          router.push(`/ticket/${data.ticket_hash}${flag}`);
+        } catch (navErr) {
+          console.error("Navigation error:", navErr);
+          setServerError("Redirect failed. Please refresh the page.");
+          setSubmitting(false);
+        }
+        return;
+      }
+
       // 409 = conflict (email/phone mismatch)
       if (res.status === 409) {
         setServerError(
@@ -86,10 +103,18 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
       } else if (data.errors) {
         setErrors(data.errors);
       } else {
-        setServerError(data.error ?? "Something went wrong. Please try again.");
+        const errorMsg = data.error ?? "Something went wrong. Please try again.";
+        console.error("RSVP API error:", {
+          status: res.status,
+          statusText: res.statusText,
+          data,
+          headers: Object.fromEntries(res.headers.entries()),
+        });
+        setServerError(errorMsg);
       }
     } catch (err) {
-      console.error("RSVP submission error:", err);
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error("RSVP submission error:", errorMsg, err);
       setServerError(
         "Network error. Please check your connection and try again."
       );
