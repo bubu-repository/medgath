@@ -167,6 +167,7 @@ export default function Scanner() {
             </p>
             <div className="mt-2 flex gap-2">
               <input
+                type="text"
                 value={manualCode}
                 onChange={(e) => setManualCode(e.target.value.toUpperCase())}
                 placeholder="e.g. BJW6Y"
@@ -174,16 +175,21 @@ export default function Scanner() {
                 autoCorrect="off"
                 spellCheck={false}
                 maxLength={24}
+                inputMode="text"
+                aria-label="Ticket code"
                 className="w-full rounded-lg border border-ink/15 bg-white px-4
                            py-3 font-mono text-lg tracking-[0.2em] outline-none
-                           transition focus:border-ink focus:ring-2 focus:ring-ink/20"
+                           transition focus:border-ink focus:ring-2 focus:ring-ink/20
+                           disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={busy}
               />
               <button
                 type="submit"
                 disabled={busy || !manualCode.trim()}
-                className="rounded-lg bg-ink px-5 font-display text-xl
+                className="whitespace-nowrap rounded-lg bg-ink px-5 font-display text-xl
                            tracking-widest text-paper transition hover:bg-black
                            disabled:cursor-not-allowed disabled:opacity-60"
+                aria-label="Submit ticket code"
               >
                 {busy ? "…" : "GO"}
               </button>

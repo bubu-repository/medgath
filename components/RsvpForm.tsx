@@ -9,16 +9,19 @@ import { ACCENT } from "@/lib/theme";
 function Field({
   label,
   error,
+  hint,
   children,
 }: {
   label: string;
   error?: string;
+  hint?: string;
   children: React.ReactNode;
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-sm font-medium text-ink/80">
-        {label}
+      <span className="mb-1.5 flex items-baseline justify-between">
+        <span className="text-sm font-medium text-ink/80">{label}</span>
+        {hint && <span className="text-xs text-ink/50">{hint}</span>}
       </span>
       {children}
       {error && (
@@ -74,10 +77,22 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
         router.push(`/ticket/${data.ticket_hash}${flag}`);
         return;
       }
-      if (data.errors) setErrors(data.errors);
-      else setServerError(data.error ?? "Something went wrong. Please try again.");
-    } catch {
-      setServerError("Network error. Please check your connection and retry.");
+      // 409 = conflict (email/phone mismatch)
+      if (res.status === 409) {
+        setServerError(
+          data.error ||
+            "Email or phone number already registered with different details."
+        );
+      } else if (data.errors) {
+        setErrors(data.errors);
+      } else {
+        setServerError(data.error ?? "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      console.error("RSVP submission error:", err);
+      setServerError(
+        "Network error. Please check your connection and try again."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -146,7 +161,7 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
             />
           </Field>
 
-          <Field label="Would you like to contribute? (optional)">
+          <Field label="Would you like to contribute?" hint="optional">
             <textarea
               className={`${inputCls} min-h-20 resize-y`}
               value={values.contribution}

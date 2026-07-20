@@ -88,8 +88,8 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-8 sm:py-8">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <p className="font-display text-lg tracking-[0.35em] text-brand">
             BUBU.COM

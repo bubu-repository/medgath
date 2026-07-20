@@ -72,7 +72,7 @@ export default function EventShell({
         className={`pointer-events-none absolute top-[36%] left-[-16%] h-80 w-80 rounded-full blur-3xl ${a.glowB}`}
       />
 
-      <main className="relative mx-auto w-full max-w-xl px-5 py-10 sm:py-14">
+      <main className="relative mx-auto w-full max-w-xl px-4 py-8 sm:px-5 sm:py-14">
         <header className="text-center">
           <p className="font-display text-lg tracking-[0.35em] text-brand">
             BUBU.COM

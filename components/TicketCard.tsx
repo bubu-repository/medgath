@@ -38,7 +38,7 @@ export default function TicketCard({
         className={`pointer-events-none absolute top-[42%] left-[-18%] h-72 w-72 rounded-full blur-3xl ${a.glowB}`}
       />
 
-      <main className="relative mx-auto w-full max-w-md px-5 py-10">
+      <main className="relative mx-auto w-full max-w-md px-4 py-6 sm:px-5 sm:py-10">
         {existing && (
           <p className="glass mb-6 rounded-lg px-4 py-3 text-center text-sm text-ink/70">
             You had already RSVP&apos;d. Here is your original ticket.
