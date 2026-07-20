@@ -215,7 +215,7 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
       </button>
 
       <p className="text-center text-xs text-ink/50">
-        Seats are limited and by invitation only.
+        Confirm your seat by July 30. Seats are limited and by invitation only.
       </p>
     </form>
   );
