@@ -132,18 +132,18 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
           className={inputCls}
           value={values.name}
           onChange={set("name")}
-          placeholder="Your name"
+          placeholder="Your full name"
           autoComplete="name"
         />
       </Field>
 
-      <Field label="Email" error={errors.email}>
+      <Field label="Email address" error={errors.email}>
         <input
           className={inputCls}
           type="email"
           value={values.email}
           onChange={set("email")}
-          placeholder="you@company.com"
+          placeholder="your@email.com"
           autoComplete="email"
         />
       </Field>
@@ -160,14 +160,14 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
       </Field>
 
       <Field
-        label={isBubu30 ? "Company" : "Media / Company"}
+        label={isBubu30 ? "Company or organization" : "Media outlet or company"}
         error={errors.company}
       >
         <input
           className={inputCls}
           value={values.company}
           onChange={set("company")}
-          placeholder={isBubu30 ? "Where you work now" : "Your outlet or company"}
+          placeholder={isBubu30 ? "Where you work" : "Your outlet"}
           autoComplete="organization"
         />
       </Field>
@@ -175,23 +175,24 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
       {isBubu30 && (
         <>
           <Field
-            label="Your Bubu era (what period were you in Bubu?)"
+            label="Your Bubu era"
             error={errors.bubu_period}
+            hint="which years were you involved"
           >
             <input
               className={inputCls}
               value={values.bubu_period}
               onChange={set("bubu_period")}
-              placeholder="e.g. 2003–2008, the IDByte years"
+              placeholder="e.g. 2003–2008"
             />
           </Field>
 
-          <Field label="Would you like to contribute?" hint="optional">
+          <Field label="Contribution" hint="optional" error={errors.contribution}>
             <textarea
-              className={`${inputCls} min-h-20 resize-y`}
+              className={`${inputCls} min-h-20 resize-none`}
               value={values.contribution}
               onChange={set("contribution")}
-              placeholder="A performance, food, or another gift: tell us here"
+              placeholder="A performance, food, gift, or idea you'd like to bring"
             />
           </Field>
         </>
@@ -210,11 +211,11 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
                    tracking-widest transition
                    disabled:cursor-not-allowed disabled:opacity-60 ${a.button}`}
       >
-        {submitting ? "SAVING YOUR SEAT…" : "RSVP NOW"}
+        {submitting ? "SAVING…" : "RSVP NOW"}
       </button>
 
       <p className="text-center text-xs text-ink/50">
-        Seats are limited and by invitation only. Kindly confirm by 30 July 2026.
+        Seats are limited and by invitation only.
       </p>
     </form>
   );

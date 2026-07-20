@@ -11,7 +11,7 @@ type Result =
   | { kind: "not_found"; code: string }
   | { kind: "error"; message: string };
 
-const EVENT_LABEL = { media: "Media Gathering", bubu30: "30th Anniversary" };
+const EVENT_LABEL = { media: "Media Gathering", bubu30: "BUBU 30th Anniversary" };
 
 export default function Scanner() {
   const [result, setResult] = useState<Result | null>(null);

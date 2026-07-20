@@ -22,18 +22,18 @@ export default function Home() {
       <div className="mt-10">
         <Bubu30Logo />
       </div>
-      <h1 className="mt-8 font-display text-4xl tracking-wide">
+      <h1 className="mt-8 font-display text-4xl tracking-wide sm:text-5xl">
         AHEAD. <span className="text-brand">ON</span> REPEAT.
       </h1>
-      <p className="mt-2 text-xs uppercase tracking-[0.4em] text-ink/55">
-        Thirtieth Anniversary
+      <p className="mt-3 text-xs uppercase tracking-[0.4em] text-ink/55">
+        30th Anniversary
       </p>
-      <p className="mt-10 text-xs text-ink/45">
-        check out{" "}
+      <p className="mt-12 text-xs text-ink/45">
+        visit{" "}
         <a href="https://bubu.com" className="text-brand">
           bubu.com
         </a>{" "}
-        for more info
+        for more
       </p>
     </main>
   );

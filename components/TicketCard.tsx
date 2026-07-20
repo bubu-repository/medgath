@@ -99,8 +99,8 @@ export default function TicketCard({
           <p className="text-xs font-semibold text-ink/80">
             📸 SAVE THIS TICKET
           </p>
-          <p className="mt-1 text-xs text-ink/65 leading-relaxed">
-            Screenshot or download your QR code. You need this to enter the event.
+          <p className="mt-1.5 text-xs text-ink/65 leading-relaxed">
+            Screenshot or download. You need this QR code to enter.
           </p>
         </div>
 
@@ -115,11 +115,11 @@ export default function TicketCard({
 
         {/* Recovery Info */}
         <p className="mt-3 rounded-lg bg-ink/5 px-4 py-3 text-center text-xs text-ink/55 leading-relaxed">
-          <span className="font-semibold">Lost your ticket?</span> Fill out the form again with the same email and phone number to retrieve it.
+          Lost your ticket? Fill the form again with the same email and phone to retrieve it.
         </p>
 
         {existing && (
-          <p className="mt-3 rounded-lg border border-amber-200/50 bg-amber-50/40 px-4 py-2 text-center text-xs text-amber-700">
+          <p className="mt-3 rounded-lg border border-amber-200/50 bg-amber-50/40 px-4 py-2.5 text-center text-xs text-amber-700">
             This is your original ticket from a previous RSVP.
           </p>
         )}

@@ -22,15 +22,15 @@ export const EVENT_DETAILS: Record<
   media: {
     title: "Media Gathering",
     tagline: "Ahead. On Repeat.",
-    date: "Friday, July 31st, 2026",
+    date: "Friday, July 31st",
     time: "6PM - til drop",
-    venue: "Berkala Coffee",
+    venue: "Berkala Coffee Ampera",
   },
   bubu30: {
-    title: "BUBU 30 — Thirtieth Anniversary",
+    title: "BUBU 30th Anniversary",
     tagline: "Ahead. On Repeat.",
-    date: "Friday, July 31st, 2026",
+    date: "Friday, July 31st",
     time: "6PM - til drop",
-    venue: "Berkala Coffee",
+    venue: "Berkala Coffee Ampera",
   },
 };

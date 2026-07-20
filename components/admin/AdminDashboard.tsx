@@ -89,12 +89,12 @@ export default function AdminDashboard() {
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-8 sm:py-8">
-      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
         <div>
           <p className="font-display text-lg tracking-[0.35em] text-brand">
             BUBU.COM
           </p>
-          <h1 className="font-display text-3xl tracking-wider">GUEST LIST</h1>
+          <h1 className="mt-1 font-display text-3xl tracking-wider">GUEST LIST</h1>
         </div>
         <Link
           href="/admin/scan"

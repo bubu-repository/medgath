@@ -116,12 +116,12 @@ export default function EventShell({
           {children}
         </section>
 
-        <footer className="mt-10 text-center text-xs text-ink/45">
-          check out{" "}
+        <footer className="mt-12 text-center text-xs text-ink/45">
+          visit{" "}
           <a href="https://bubu.com" className={a.link}>
             bubu.com
           </a>{" "}
-          for more info
+          for more
         </footer>
       </main>
     </div>
