@@ -174,7 +174,7 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
       </Field>
 
       {!isBubu30 && (
-        <Field label="How many are attending" error={errors.attendance_type}>
+        <Field label="Headcount" error={errors.attendance_type}>
           <div className="flex gap-2">
             <button
               type="button"
@@ -187,7 +187,7 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
                   : "border border-ink/15 bg-white text-ink hover:border-ink/30"
               }`}
             >
-              Just me
+              1 PAX
             </button>
             <button
               type="button"
@@ -200,7 +200,7 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
                   : "border border-ink/15 bg-white text-ink hover:border-ink/30"
               }`}
             >
-              With someone
+              2 PAX
             </button>
           </div>
         </Field>
