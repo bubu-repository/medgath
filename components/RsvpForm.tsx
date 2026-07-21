@@ -174,7 +174,7 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
       </Field>
 
       {!isBubu30 && (
-        <Field label="Headcount" error={errors.attendance_type}>
+        <Field label="How many people attending?" error={errors.attendance_type}>
           <div className="flex gap-2">
             <button
               type="button"
