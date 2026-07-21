@@ -161,15 +161,15 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
       </Field>
 
       <Field
-        label={isBubu30 ? "Company or organization" : "Media outlet or company"}
+        label={isBubu30 ? "LinkedIn profile" : "Media outlet or company"}
         error={errors.company}
       >
         <input
           className={inputCls}
           value={values.company}
           onChange={set("company")}
-          placeholder={isBubu30 ? "Where you work" : "Your outlet"}
-          autoComplete="organization"
+          placeholder={isBubu30 ? "linkedin.com/in/yourprofile" : "Your outlet"}
+          autoComplete={isBubu30 ? "url" : "organization"}
         />
       </Field>
 
