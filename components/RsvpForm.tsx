@@ -173,42 +173,38 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
         />
       </Field>
 
-      <Field label="Will you be attending" error={errors.attendance_type}>
-        <div className="flex gap-3">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="attendance"
-              value="solo"
-              checked={values.attendance_type === "solo"}
-              onChange={(e) =>
-                setValues((v) => ({
-                  ...v,
-                  attendance_type: e.target.value as "solo" | "duo",
-                }))
+      {!isBubu30 && (
+        <Field label="How many are attending" error={errors.attendance_type}>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() =>
+                setValues((v) => ({ ...v, attendance_type: "solo" }))
               }
-              className="w-4 h-4"
-            />
-            <span className="text-sm">Solo</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="attendance"
-              value="duo"
-              checked={values.attendance_type === "duo"}
-              onChange={(e) =>
-                setValues((v) => ({
-                  ...v,
-                  attendance_type: e.target.value as "solo" | "duo",
-                }))
+              className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition ${
+                values.attendance_type === "solo"
+                  ? `${a.button} text-white`
+                  : "border border-ink/15 bg-white text-ink hover:border-ink/30"
+              }`}
+            >
+              Just me
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setValues((v) => ({ ...v, attendance_type: "duo" }))
               }
-              className="w-4 h-4"
-            />
-            <span className="text-sm">With someone</span>
-          </label>
-        </div>
-      </Field>
+              className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition ${
+                values.attendance_type === "duo"
+                  ? `${a.button} text-white`
+                  : "border border-ink/15 bg-white text-ink hover:border-ink/30"
+              }`}
+            >
+              With someone
+            </button>
+          </div>
+        </Field>
+      )}
 
       {isBubu30 && (
         <>
