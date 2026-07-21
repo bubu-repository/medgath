@@ -197,6 +197,9 @@ export default function AdminDashboard() {
                     <p className="text-xs text-ink/50">
                       {g.email} · {g.phone}
                     </p>
+                    <p className="text-xs text-ink/40 mt-1">
+                      {g.guest_count === 2 ? "Attending with someone" : "Attending solo"}
+                    </p>
                   </td>
                   <td className="px-4 py-3">
                     <Badge event={g.event_type} />

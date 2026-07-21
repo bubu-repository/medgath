@@ -46,6 +46,7 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
     company: "",
     bubu_period: "",
     contribution: "",
+    attendance_type: "solo" as "solo" | "duo",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -172,6 +173,43 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
         />
       </Field>
 
+      <Field label="Will you be attending" error={errors.attendance_type}>
+        <div className="flex gap-3">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="attendance"
+              value="solo"
+              checked={values.attendance_type === "solo"}
+              onChange={(e) =>
+                setValues((v) => ({
+                  ...v,
+                  attendance_type: e.target.value as "solo" | "duo",
+                }))
+              }
+              className="w-4 h-4"
+            />
+            <span className="text-sm">Solo</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="attendance"
+              value="duo"
+              checked={values.attendance_type === "duo"}
+              onChange={(e) =>
+                setValues((v) => ({
+                  ...v,
+                  attendance_type: e.target.value as "solo" | "duo",
+                }))
+              }
+              className="w-4 h-4"
+            />
+            <span className="text-sm">With someone</span>
+          </label>
+        </div>
+      </Field>
+
       {isBubu30 && (
         <>
           <Field
@@ -216,6 +254,18 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
 
       <p className="text-center text-xs text-ink/50">
         Confirm your seat by July 30. Seats are limited and by invitation only.
+      </p>
+
+      <p className="text-center text-xs text-ink/50">
+        Questions?{" "}
+        <a
+          href="https://wa.me/+6285697661637"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={a.link}
+        >
+          Contact Widi
+        </a>
       </p>
     </form>
   );

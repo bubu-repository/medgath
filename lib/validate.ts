@@ -8,6 +8,7 @@ export interface RsvpInput {
   company: string;
   bubu_period?: string;
   contribution?: string;
+  attendance_type: "solo" | "duo";
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -60,5 +61,6 @@ export function normalizeRsvp(input: RsvpInput): RsvpInput {
     company: input.company.trim(),
     bubu_period: input.bubu_period?.trim() || undefined,
     contribution: input.contribution?.trim() || undefined,
+    attendance_type: input.attendance_type,
   };
 }

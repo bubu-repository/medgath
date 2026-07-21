@@ -9,11 +9,18 @@ export interface Guest {
   company: string;
   bubu_period: string | null;
   contribution: string | null;
+  attendance_type: "solo" | "duo";
+  guest_count: number;
   ticket_hash: string;
   check_in_status: boolean;
   checked_in_at: string | null;
   created_at: string;
 }
+
+export const EVENT_LIMITS: Record<EventType, number> = {
+  media: 30,    // companies
+  bubu30: 75,   // people
+};
 
 export const EVENT_DETAILS: Record<
   EventType,

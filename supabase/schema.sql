@@ -17,6 +17,10 @@ create table public.guests (
   bubu_period     text,                   -- "What period were you in Bubu?"
   contribution    text,                   -- optional: performance, food, other gifts
 
+  -- attendance
+  attendance_type text not null default 'solo' check (attendance_type in ('solo', 'duo')),
+  guest_count     int not null default 1,
+
   -- ticketing
   ticket_hash     text not null unique,   -- opaque token encoded in the QR
   check_in_status boolean not null default false,

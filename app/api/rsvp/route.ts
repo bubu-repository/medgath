@@ -7,6 +7,7 @@ import {
   normalizePhone,
   type RsvpInput,
 } from "@/lib/validate";
+import { EVENT_LIMITS } from "@/lib/types";
 
 // 5-char code the door team can type by hand: uppercase only, ambiguous
 // glyphs removed (0/O, 1/I/L). 31^5 = 28.6M combinations; collisions are
@@ -66,6 +67,29 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: MISMATCH_MSG }, { status: 409 });
   }
 
+  // Check capacity before inserting
+  const { count: currentCount, error: countError } = await db
+    .from("guests")
+    .select("*", { count: "exact", head: true })
+    .eq("event_type", input.event_type);
+
+  if (countError) {
+    console.error("Capacity check failed:", countError);
+    return NextResponse.json(
+      { error: "Could not verify available seats. Please try again." },
+      { status: 500 }
+    );
+  }
+
+  const limit = EVENT_LIMITS[input.event_type];
+  const guestCount = input.attendance_type === "duo" ? 2 : 1;
+  if ((currentCount || 0) + guestCount > limit) {
+    return NextResponse.json(
+      { error: "Sorry, this event is now at capacity. No more seats available." },
+      { status: 409 }
+    );
+  }
+
   for (let attempt = 0; attempt < 5; attempt++) {
     const ticket_hash = genTicketCode();
     const { data, error } = await db
@@ -78,6 +102,8 @@ export async function POST(request: Request) {
         company: input.company,
         bubu_period: input.event_type === "bubu30" ? input.bubu_period : null,
         contribution: input.event_type === "bubu30" ? input.contribution ?? null : null,
+        attendance_type: input.attendance_type,
+        guest_count: input.attendance_type === "duo" ? 2 : 1,
         ticket_hash,
       })
       .select("ticket_hash")
