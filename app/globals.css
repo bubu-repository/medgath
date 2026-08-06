@@ -1,12 +1,24 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Poster orange. Reads at full strength as a FILL: ink on brand is 5.8:1.
+     As text on the light paper it only reaches 2.85:1, so orange type uses
+     brand-deep, the same hue darkened to clear 4.5:1 at any size. */
   --color-brand: #ff5900;
+  --color-brand-deep: #c43f00;
   --color-ink: #111111;
   --color-paper: #f4f4f2;
   --color-card: #ffffff;
   --font-display: var(--font-bebas);
   --font-body: var(--font-poppins);
+}
+
+:root {
+  /* Strong custom curves. The built-in CSS easings are too weak to read as
+     intentional; these carry the punch. Never ease-in on UI: it delays the
+     first frame, the exact moment the eye is on the element. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 body {
@@ -31,4 +43,60 @@ body {
   box-shadow:
     0 8px 32px rgba(17, 17, 17, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* One authored entrance: content settles upward as the page mounts.
+   @starting-style keeps the visible state as the default, so the content
+   is never invisible if the animation never runs. */
+.rise {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 520ms var(--ease-out),
+    transform 520ms var(--ease-out);
+  transition-delay: var(--rise-delay, 0ms);
+}
+
+@starting-style {
+  .rise {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* Press feedback. Any element the user can push answers within 160ms so the
+   interface reads as listening. Transform only: it skips layout and paint. */
+.press {
+  transition: transform 160ms var(--ease-out);
+}
+
+.press:active {
+  transform: scale(0.97);
+}
+
+/* Focus ring shared by every interactive surface, drawn outside the element
+   so it never shifts layout. */
+.ring-focus:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+  border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    transition: none;
+  }
+
+  .press:active {
+    transform: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

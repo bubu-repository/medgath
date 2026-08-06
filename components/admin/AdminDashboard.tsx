@@ -15,7 +15,7 @@ function Badge({ event }: { event: EventType }) {
   return (
     <span
       className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-        event === "media" ? "bg-brand/15 text-brand" : "bg-ink/10 text-ink"
+        event === "media" ? "bg-brand/15 text-brand-deep" : "bg-ink/10 text-ink"
       }`}
     >
       {EVENT_LABEL[event]}
@@ -84,14 +84,14 @@ export default function AdminDashboard() {
   const tabs: { key: Filter; label: string }[] = [
     { key: "all", label: "All" },
     { key: "media", label: "Media Gathering" },
-    { key: "bubu30", label: "30th Anniversary" },
+    { key: "bubu30", label: "30th Anniversary (RSVP)" },
   ];
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-8 sm:py-8">
       <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
         <div>
-          <p className="font-display text-lg tracking-[0.35em] text-brand">
+          <p className="font-display text-lg tracking-[0.35em] text-brand-deep">
             BUBU.COM
           </p>
           <h1 className="mt-1 font-display text-3xl tracking-wider">GUEST LIST</h1>

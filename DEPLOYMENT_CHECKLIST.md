@@ -6,7 +6,7 @@ Complete this before going live on July 31st, 2026.
 
 - [ ] **Test full flow end-to-end**
   - [ ] Register on `/media` → get ticket → download QR
-  - [ ] Register on `/bubu30` → fill Bubu era + contribution → get ticket
+  - [ ] Register on `/rsvp` → fill Bubu era + contribution → get ticket
   - [ ] Duplicate test: re-register with same email+phone → see original ticket
   - [ ] Mismatch test: same email, different phone → see error
   - [ ] Invalid ticket: `/ticket/XXXXXX` → see 404 page
@@ -83,7 +83,7 @@ Complete this before going live on July 31st, 2026.
 
 - [ ] **Final links ready:**
   - [ ] Media: `https://medgath.vercel.app/media` (or custom domain)
-  - [ ] BUBU 30: `https://medgath.vercel.app/bubu30`
+  - [ ] BUBU 30: `https://medgath.vercel.app/rsvp`
   - [ ] Admin: `https://medgath.vercel.app/admin` (share passcode separately)
 
 - [ ] Share links privately via email/WhatsApp only (not public)

@@ -6,7 +6,7 @@ A production-ready event RSVP and QR code check-in system built with Next.js, Su
 
 ### Guest Experience
 
-- **Separate landing pages** (`/media`, `/bubu30`) with event-specific forms
+- **Separate landing pages** (`/media`, `/rsvp`) with event-specific forms
 - **Dynamic ticket generation**: 5-character codes + scannable QR codes
 - **Duplicate detection**: Exact email + phone match prevents double registration; partial mismatches rejected
 - **Ticket download**: PNG with integrated quiet zone for mobile scanning
@@ -55,7 +55,7 @@ npm run dev
 ```
 
 **Test logins:**
-- Guest: `/media` or `/bubu30`
+- Guest: `/media` or `/rsvp`
 - Admin: `/admin` with passcode from `.env.local`
 
 ## Deployment
@@ -81,5 +81,5 @@ See [VERCEL_SETUP.md](VERCEL_SETUP.md) for Vercel deployment.
 - [ ] Test RSVP, QR, and scanner with real device
 - [ ] Set custom domain in Vercel
 - [ ] Enable Supabase backups
-- [ ] Share `/media` and `/bubu30` links privately only
+- [ ] Share `/media` and `/rsvp` links privately only
 - [ ] Contact: widi@bubu.com for questions

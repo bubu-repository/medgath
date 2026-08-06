@@ -15,7 +15,7 @@ export default function Error({
 
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 py-16 text-center">
-      <p className="font-display text-lg tracking-[0.35em] text-brand">
+      <p className="font-display text-lg tracking-[0.35em] text-brand-deep">
         BUBU.COM
       </p>
       <p className="text-6xl">⚠</p>

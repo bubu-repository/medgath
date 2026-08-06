@@ -1,10 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { EventType } from "@/lib/types";
 import { validateRsvp } from "@/lib/validate";
 import { ACCENT } from "@/lib/theme";
+
+function Label({ label, hint }: { label: string; hint?: string }) {
+  return (
+    <span className="mb-1.5 flex items-baseline justify-between gap-3">
+      <span className="text-sm font-medium text-ink/80">{label}</span>
+      {hint && <span className="text-xs text-ink/60">{hint}</span>}
+    </span>
+  );
+}
+
+function ErrorText({ id, children }: { id: string; children: string }) {
+  return (
+    <span id={id} className="mt-1 block text-xs text-red-700">
+      {children}
+    </span>
+  );
+}
 
 function Field({
   label,
@@ -15,28 +32,102 @@ function Field({
   label: string;
   error?: string;
   hint?: string;
-  children: React.ReactNode;
+  children: (props: {
+    "aria-invalid"?: true;
+    "aria-describedby"?: string;
+  }) => React.ReactNode;
 }) {
+  const errorId = useId();
   return (
     <label className="block">
-      <span className="mb-1.5 flex items-baseline justify-between">
-        <span className="text-sm font-medium text-ink/80">{label}</span>
-        {hint && <span className="text-xs text-ink/50">{hint}</span>}
-      </span>
-      {children}
-      {error && (
-        <span className="mt-1 block text-xs text-red-600">{error}</span>
+      <Label label={label} hint={hint} />
+      {children(
+        error ? { "aria-invalid": true, "aria-describedby": errorId } : {}
       )}
+      {error && <ErrorText id={errorId}>{error}</ErrorText>}
     </label>
+  );
+}
+
+// Two-option segmented control. The selected thumb slides rather than
+// cutting, so the change reads as one control changing state instead of two
+// buttons swapping colors. Transform only, 220ms, strong ease-out.
+//
+// Built on real radio inputs, not ARIA-labelled buttons: native radios bring
+// roving tab focus and arrow-key selection with them, which a pair of
+// role="radio" buttons would each have to reimplement.
+function PaxToggle({
+  name,
+  value,
+  onChange,
+  accentClass,
+  selectedTextClass,
+}: {
+  name: string;
+  value: "solo" | "duo";
+  onChange: (next: "solo" | "duo") => void;
+  accentClass: string;
+  selectedTextClass: string;
+}) {
+  const options = [
+    { key: "solo" as const, label: "1 PAX" },
+    { key: "duo" as const, label: "2 PAX" },
+  ];
+  return (
+    <div
+      role="group"
+      aria-label="How many people attending"
+      className="relative grid grid-cols-2 rounded-lg border border-ink/15 bg-white p-1"
+    >
+      {/* Thumb spans exactly one cell: the container has no gap, so
+          50% of the padding box minus the 0.25rem inset is one column. */}
+      <span
+        aria-hidden
+        className={`pointer-events-none absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-md
+                    transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${accentClass}`}
+        style={{
+          transform: value === "duo" ? "translateX(100%)" : "translateX(0)",
+        }}
+      />
+      {options.map((option) => {
+        const selected = value === option.key;
+        return (
+          <label
+            key={option.key}
+            className="press relative z-10 cursor-pointer text-center"
+          >
+            <input
+              type="radio"
+              name={name}
+              value={option.key}
+              checked={selected}
+              onChange={() => onChange(option.key)}
+              className="peer sr-only"
+            />
+            <span
+              className={`block rounded-md py-2.5 text-sm font-semibold
+                          transition-[color] duration-200 ease-out
+                          peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3
+                          peer-focus-visible:outline-ink
+                          ${selected ? selectedTextClass : "text-ink/70 hover:text-ink"}`}
+            >
+              {option.label}
+            </span>
+          </label>
+        );
+      })}
+    </div>
   );
 }
 
 export default function RsvpForm({ eventType }: { eventType: EventType }) {
   const router = useRouter();
+  const paxName = useId();
   const a = ACCENT[eventType];
   const inputCls =
     "w-full rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink " +
-    "placeholder:text-ink/35 outline-none transition " +
+    "placeholder:text-ink/60 outline-none " +
+    "aria-[invalid]:border-red-500 aria-[invalid]:focus:ring-red-500/25 " +
     a.input;
 
   const [values, setValues] = useState({
@@ -129,81 +220,75 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
       <Field label="Full name" error={errors.name}>
-        <input
-          className={inputCls}
-          value={values.name}
-          onChange={set("name")}
-          placeholder="Your full name"
-          autoComplete="name"
-        />
+        {(aria) => (
+          <input
+            {...aria}
+            className={inputCls}
+            value={values.name}
+            onChange={set("name")}
+            placeholder="Your full name"
+            autoComplete="name"
+          />
+        )}
       </Field>
 
       <Field label="Email address" error={errors.email}>
-        <input
-          className={inputCls}
-          type="email"
-          value={values.email}
-          onChange={set("email")}
-          placeholder="your@email.com"
-          autoComplete="email"
-        />
+        {(aria) => (
+          <input
+            {...aria}
+            className={inputCls}
+            type="email"
+            value={values.email}
+            onChange={set("email")}
+            placeholder="your@email.com"
+            autoComplete="email"
+          />
+        )}
       </Field>
 
       <Field label="Phone number" error={errors.phone}>
-        <input
-          className={inputCls}
-          type="tel"
-          value={values.phone}
-          onChange={set("phone")}
-          placeholder="+62 812 3456 7890"
-          autoComplete="tel"
-        />
+        {(aria) => (
+          <input
+            {...aria}
+            className={inputCls}
+            type="tel"
+            value={values.phone}
+            onChange={set("phone")}
+            placeholder="+62 812 3456 7890"
+            autoComplete="tel"
+          />
+        )}
       </Field>
 
       <Field
         label={isBubu30 ? "LinkedIn profile" : "Media outlet or company"}
         error={errors.company}
       >
-        <input
-          className={inputCls}
-          value={values.company}
-          onChange={set("company")}
-          placeholder={isBubu30 ? "linkedin.com/in/yourprofile" : "Your outlet"}
-          autoComplete={isBubu30 ? "url" : "organization"}
-        />
+        {(aria) => (
+          <input
+            {...aria}
+            className={inputCls}
+            value={values.company}
+            onChange={set("company")}
+            placeholder={isBubu30 ? "linkedin.com/in/yourprofile" : "Your outlet"}
+            autoComplete={isBubu30 ? "url" : "organization"}
+          />
+        )}
       </Field>
 
       {!isBubu30 && (
-        <Field label="How many people attending?" error={errors.attendance_type}>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() =>
-                setValues((v) => ({ ...v, attendance_type: "solo" }))
-              }
-              className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition ${
-                values.attendance_type === "solo"
-                  ? `${a.button} text-white`
-                  : "border border-ink/15 bg-white text-ink hover:border-ink/30"
-              }`}
-            >
-              1 PAX
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                setValues((v) => ({ ...v, attendance_type: "duo" }))
-              }
-              className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition ${
-                values.attendance_type === "duo"
-                  ? `${a.button} text-white`
-                  : "border border-ink/15 bg-white text-ink hover:border-ink/30"
-              }`}
-            >
-              2 PAX
-            </button>
-          </div>
-        </Field>
+        <div className="block">
+          <Label label="How many people attending?" hint="2 pax max" />
+          <PaxToggle
+            name={paxName}
+            value={values.attendance_type}
+            onChange={(next) =>
+              setValues((v) => ({ ...v, attendance_type: next }))
+            }
+            accentClass={eventType === "media" ? "bg-brand" : "bg-ink"}
+            selectedTextClass={eventType === "media" ? "text-ink" : "text-paper"}
+          />
+        </div>
       )}
 
       {isBubu30 && (
@@ -213,27 +298,36 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
             error={errors.bubu_period}
             hint="which years were you involved"
           >
-            <input
-              className={inputCls}
-              value={values.bubu_period}
-              onChange={set("bubu_period")}
-              placeholder="e.g. 2003–2008"
-            />
+            {(aria) => (
+              <input
+                {...aria}
+                className={inputCls}
+                value={values.bubu_period}
+                onChange={set("bubu_period")}
+                placeholder="e.g. 2003–2008"
+              />
+            )}
           </Field>
 
           <Field label="Contribution" hint="optional" error={errors.contribution}>
-            <textarea
-              className={`${inputCls} min-h-20 resize-none`}
-              value={values.contribution}
-              onChange={set("contribution")}
-              placeholder="A performance, food, gift, or idea you'd like to bring"
-            />
+            {(aria) => (
+              <textarea
+                {...aria}
+                className={`${inputCls} min-h-20 resize-none`}
+                value={values.contribution}
+                onChange={set("contribution")}
+                placeholder="A performance, food, gift, or idea you'd like to bring"
+              />
+            )}
           </Field>
         </>
       )}
 
       {serverError && (
-        <p className="rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <p
+          role="alert"
+          className="rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
           {serverError}
         </p>
       )}
@@ -241,28 +335,27 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
       <button
         type="submit"
         disabled={submitting}
-        className={`w-full rounded-lg px-6 py-3.5 font-display text-2xl
-                   tracking-widest transition
+        aria-busy={submitting}
+        className={`press w-full rounded-lg px-6 py-3.5 font-display text-2xl tracking-widest
                    disabled:cursor-not-allowed disabled:opacity-60 ${a.button}`}
       >
         {submitting ? "SAVING…" : "RSVP NOW"}
       </button>
 
-      <p className="text-center text-xs text-ink/50">
-        Confirm your seat by July 30. Seats are limited and by invitation only.
-      </p>
-
-      <p className="text-center text-xs text-ink/50">
-        Questions?{" "}
-        <a
-          href="https://wa.me/+6285697661637"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={a.link}
-        >
-          Contact Widi
-        </a>
-      </p>
+      <div className="space-y-1.5 text-center text-xs text-ink/60">
+        <p>Confirm your seat by July 30. Seats are limited and by invitation only.</p>
+        <p>
+          Questions?{" "}
+          <a
+            href="https://wa.me/+6285697661637"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={a.link}
+          >
+            Contact Widi
+          </a>
+        </p>
+      </div>
     </form>
   );
 }

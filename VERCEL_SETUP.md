@@ -54,7 +54,7 @@ Once environment variables are set:
 
 ## Live Routes After Deploy
 
-- Guest RSVP: `https://medgath.vercel.app/media` and `/bubu30`
+- Guest RSVP: `https://medgath.vercel.app/media` and `/rsvp`
 - Ticket lookup: `https://medgath.vercel.app/ticket/[code]`
 - Admin login: `https://medgath.vercel.app/admin`
 - Admin scan: `https://medgath.vercel.app/admin/scan`
