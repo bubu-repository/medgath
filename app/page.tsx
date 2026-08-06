@@ -1,7 +1,6 @@
+import Link from "next/link";
 import Bubu30Logo from "@/components/Bubu30Logo";
 
-// Deliberately no event links here: each event's URL is distributed
-// privately, so the root page is just a brand splash.
 export default function Home() {
   return (
     <main className="relative mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 py-16 text-center">
@@ -28,6 +27,22 @@ export default function Home() {
       <p className="mt-3 text-xs uppercase tracking-[0.4em] text-ink/55">
         30th Anniversary
       </p>
+
+      <div className="mt-12 flex w-full gap-3">
+        <Link
+          href="/media"
+          className="flex-1 rounded-lg bg-brand px-4 py-3 font-display text-lg tracking-widest text-white transition hover:brightness-110"
+        >
+          MEDIA GATHERING
+        </Link>
+        <Link
+          href="/bubu30"
+          className="flex-1 rounded-lg border-2 border-ink px-4 py-3 font-display text-lg tracking-widest text-ink transition hover:bg-ink hover:text-white"
+        >
+          BUBU 30
+        </Link>
+      </div>
+
       <p className="mt-12 text-xs text-ink/45">
         visit{" "}
         <a href="https://bubu.com" className="text-brand">
