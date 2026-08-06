@@ -67,10 +67,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: MISMATCH_MSG }, { status: 409 });
   }
 
-  // Check capacity before inserting
-  const { count: currentCount, error: countError } = await db
+  // Capacity. The two events count different things: media is capped at 30
+  // COMPANIES, so one RSVP costs one slot whether they bring 1 or 2 pax;
+  // bubu30 is capped at 75 PEOPLE. Adding a headcount delta to a row count
+  // would reject valid media RSVPs as soon as enough of them chose 2 pax.
+  const limit = EVENT_LIMITS[input.event_type];
+  const countsPeople = input.event_type === "bubu30";
+  const guestCount = input.attendance_type === "duo" ? 2 : 1;
+
+  const { data: existing, error: countError } = await db
     .from("guests")
-    .select("*", { count: "exact", head: true })
+    .select("guest_count")
     .eq("event_type", input.event_type);
 
   if (countError) {
@@ -81,9 +88,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const limit = EVENT_LIMITS[input.event_type];
-  const guestCount = input.attendance_type === "duo" ? 2 : 1;
-  if ((currentCount || 0) + guestCount > limit) {
+  const used = countsPeople
+    ? (existing ?? []).reduce((sum, row) => sum + (row.guest_count || 1), 0)
+    : (existing ?? []).length;
+  const cost = countsPeople ? guestCount : 1;
+
+  if (used + cost > limit) {
     return NextResponse.json(
       { error: "Sorry, this event is now at capacity. No more seats available." },
       { status: 409 }

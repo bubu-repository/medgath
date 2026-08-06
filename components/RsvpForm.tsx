@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { EventType } from "@/lib/types";
+import { RSVP_DEADLINE } from "@/lib/types";
 import { validateRsvp } from "@/lib/validate";
 import { ACCENT } from "@/lib/theme";
 
@@ -343,7 +344,10 @@ export default function RsvpForm({ eventType }: { eventType: EventType }) {
       </button>
 
       <div className="space-y-1.5 text-center text-xs text-ink/60">
-        <p>Confirm your seat by July 30. Seats are limited and by invitation only.</p>
+        <p>
+          Confirm your seat by {RSVP_DEADLINE}. Seats are limited and by
+          invitation only.
+        </p>
         <p>
           Questions?{" "}
           <a

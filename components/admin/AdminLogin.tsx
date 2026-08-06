@@ -34,7 +34,7 @@ export default function AdminLogin() {
   return (
     <main className="mx-auto flex w-full max-w-sm flex-1 flex-col items-center justify-center px-5 py-16">
       <div className="glass rounded-2xl p-6 sm:p-8 w-full">
-        <p className="font-display text-lg tracking-[0.35em] text-brand-deep">
+        <p className="font-display text-lg tracking-[0.35em] text-brand">
           BUBU.COM
         </p>
         <h1 className="mt-3 font-display text-3xl tracking-wider">

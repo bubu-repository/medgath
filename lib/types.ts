@@ -29,15 +29,20 @@ export const EVENT_DETAILS: Record<
   media: {
     title: "Media Gathering",
     tagline: "Ahead. On Repeat.",
-    date: "Friday, July 31, 2026",
-    time: "3PM - 5PM",
+    date: "Friday, August 14, 2026",
+    time: "2PM – 4PM",
     venue: "Berkala Coffee Ampera",
   },
   bubu30: {
     title: "BUBU 30th Anniversary",
     tagline: "Ahead. On Repeat.",
-    date: "Friday, July 31, 2026",
-    time: "7PM - til drop",
+    date: "Friday, August 14, 2026",
+    // No leading dash: in the 3-up this wraps, and "- til drop" on its own
+    // line reads as a dangling fragment.
+    time: "5.30PM til drop",
     venue: "Berkala Coffee Ampera",
   },
 };
+
+// RSVP cut-off, shown on both forms.
+export const RSVP_DEADLINE = "August 11";

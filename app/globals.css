@@ -1,11 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Poster orange. Reads at full strength as a FILL: ink on brand is 5.8:1.
-     As text on the light paper it only reaches 2.85:1, so orange type uses
-     brand-deep, the same hue darkened to clear 4.5:1 at any size. */
+  /* Poster orange at full strength, everywhere. */
   --color-brand: #ff5900;
-  --color-brand-deep: #c43f00;
   --color-ink: #111111;
   --color-paper: #f4f4f2;
   --color-card: #ffffff;

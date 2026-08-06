@@ -22,7 +22,7 @@ const DOORS = [
   {
     href: "/rsvp",
     label: "For the Bubu family",
-    title: "30TH ANNIVERSARY",
+    title: "RSVP",
     time: EVENT_DETAILS.bubu30.time,
     className:
       "bg-ink text-paper transition-[background-color,box-shadow] duration-200 ease-out " +
@@ -49,7 +49,7 @@ export default function Home() {
 
       <main className="relative mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-5 py-16 text-center">
         <div className="rise">
-          <p className="font-display text-lg tracking-[0.35em] text-brand-deep">
+          <p className="font-display text-lg tracking-[0.35em] text-brand">
             BUBU.COM
           </p>
           <p className="text-[10px] uppercase tracking-[0.3em] text-ink/60">
@@ -69,7 +69,7 @@ export default function Home() {
           style={{ "--rise-delay": "140ms" } as React.CSSProperties}
         >
           <h1 className="font-display text-4xl tracking-wide sm:text-5xl">
-            AHEAD. <span className="text-brand-deep">ON</span> REPEAT.
+            AHEAD. <span className="text-brand">ON</span> REPEAT.
           </h1>
           <p className="mt-3 text-xs uppercase tracking-[0.4em] text-ink/60">
             30th Anniversary
@@ -80,7 +80,7 @@ export default function Home() {
           className="rise mt-8 text-sm leading-relaxed text-ink/70"
           style={{ "--rise-delay": "200ms" } as React.CSSProperties}
         >
-          Two gatherings, one night. {EVENT_DETAILS.media.date} at{" "}
+          Two gatherings, one day. {EVENT_DETAILS.media.date} at{" "}
           {EVENT_DETAILS.media.venue}. Pick the room you belong in.
         </p>
 
@@ -116,7 +116,7 @@ export default function Home() {
           visit{" "}
           <a
             href="https://bubu.com"
-            className="text-brand-deep underline decoration-brand-deep/40 underline-offset-2 transition-[text-decoration-color] duration-200 ease-out hover:decoration-brand-deep"
+            className="text-brand underline decoration-brand/40 underline-offset-2 transition-[text-decoration-color] duration-200 ease-out hover:decoration-brand"
           >
             bubu.com
           </a>{" "}

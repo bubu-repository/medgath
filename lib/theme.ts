@@ -23,7 +23,7 @@ export const ACCENT: Record<
 > = {
   media: {
     kicker: "bg-brand text-ink",
-    on: "text-brand-deep",
+    on: "text-brand",
     button:
       "bg-brand text-ink transition-[filter,box-shadow] duration-200 ease-out " +
       "hover:brightness-105 hover:shadow-[0_6px_20px_rgba(255,89,0,0.28)] " +
@@ -36,15 +36,15 @@ export const ACCENT: Record<
       "transition-[border-color,box-shadow] duration-200 ease-out " +
       "focus:border-brand focus:ring-2 focus:ring-brand/25 hover:border-ink/25",
     link:
-      "text-brand-deep underline decoration-brand-deep/40 underline-offset-2 " +
-      "transition-[text-decoration-color] duration-200 ease-out hover:decoration-brand-deep",
+      "text-brand underline decoration-brand/40 underline-offset-2 " +
+      "transition-[text-decoration-color] duration-200 ease-out hover:decoration-brand",
     ticketBand: "bg-brand text-ink",
     glowA: "bg-brand/25",
     glowB: "bg-orange-200/50",
   },
   bubu30: {
     kicker: "bg-ink text-paper",
-    on: "text-brand-deep",
+    on: "text-brand",
     button:
       "bg-ink text-paper transition-[background-color,box-shadow] duration-200 ease-out " +
       "hover:bg-black hover:shadow-[0_6px_20px_rgba(17,17,17,0.24)] " +

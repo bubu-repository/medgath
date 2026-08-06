@@ -43,7 +43,9 @@ function Detail({
         <p className="text-[9px] uppercase tracking-[0.35em] text-ink/60">
           {label}
         </p>
-        <p className="text-sm font-semibold leading-snug">{value}</p>
+        {/* balance: all three values wrap to two lines in the 3-up, and
+            without it the break lands mid-phrase ("5.30PM - til / drop"). */}
+        <p className="text-sm font-semibold leading-snug text-balance">{value}</p>
       </div>
     </div>
   );
@@ -81,7 +83,7 @@ export default function EventShell({
       <main className="relative mx-auto w-full max-w-xl px-4 py-8 sm:px-5 sm:py-14">
         <header className="text-center">
           <div className="rise">
-            <p className="font-display text-lg tracking-[0.35em] text-brand-deep">
+            <p className="font-display text-lg tracking-[0.35em] text-brand">
               BUBU.COM
             </p>
             <p className="text-[10px] uppercase tracking-[0.3em] text-ink/60">

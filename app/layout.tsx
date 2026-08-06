@@ -17,7 +17,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "BUBU 30 — Ahead. On Repeat.",
   description:
-    "RSVP for the BUBU.COM thirtieth anniversary — Friday, July 31st 2026, Berkala Coffee.",
+    "RSVP for the BUBU.COM 30th anniversary. Friday, August 14, 2026 at Berkala Coffee Ampera.",
 };
 
 export default function RootLayout({
