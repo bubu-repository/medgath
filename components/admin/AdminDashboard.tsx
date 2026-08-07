@@ -59,6 +59,23 @@ function fmtTime(iso: string | null): string {
   });
 }
 
+// Registrations arrive over weeks, so this one does need the date. Day and
+// month lead; the time sits under it as the same-day tiebreaker.
+function RegisteredAt({ iso }: { iso: string | null }) {
+  if (!iso) return <span className="text-ink/40">—</span>;
+  const d = new Date(iso);
+  return (
+    <span className="block whitespace-nowrap">
+      <span className="block font-medium">
+        {d.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+      </span>
+      <span className="block text-xs text-ink/60">
+        {d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
+      </span>
+    </span>
+  );
+}
+
 // Guests skip optional fields by typing "-" or ".", which would otherwise
 // render as "Era: -" noise in every row. Only show what carries information.
 function meaningful(value: string | null): string | null {
@@ -302,6 +319,17 @@ export default function AdminDashboard() {
               <div className="mt-3 border-t border-ink/10 pt-2 text-sm">
                 <Details guest={g} />
               </div>
+              <p className="mt-2 text-xs text-ink/60">
+                Registered{" "}
+                {g.created_at
+                  ? new Date(g.created_at).toLocaleString("en-GB", {
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "—"}
+              </p>
             </li>
           ))}
         </ul>
@@ -311,12 +339,13 @@ export default function AdminDashboard() {
         <div className="glass mt-4 hidden rounded-2xl lg:block">
           <table className="w-full table-fixed text-left text-sm">
             <colgroup>
-              <col className="w-[28%]" />
-              <col className="w-[11%]" />
-              <col className="w-[8%]" />
-              <col className="w-[16%]" />
+              <col className="w-[24%]" />
               <col className="w-[10%]" />
-              <col className="w-[27%]" />
+              <col className="w-[6%]" />
+              <col className="w-[14%]" />
+              <col className="w-[9%]" />
+              <col className="w-[11%]" />
+              <col className="w-[26%]" />
             </colgroup>
             <thead>
               <tr className="border-b border-ink/10 text-[11px] uppercase tracking-wider text-ink/60">
@@ -325,6 +354,7 @@ export default function AdminDashboard() {
                 <th className="px-4 py-3 font-semibold">Pax</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
                 <th className="px-4 py-3 font-semibold">Event</th>
+                <th className="px-4 py-3 font-semibold">Registered</th>
                 <th className="px-4 py-3 font-semibold">Company</th>
               </tr>
             </thead>
@@ -352,6 +382,9 @@ export default function AdminDashboard() {
                   </td>
                   <td className="px-4 py-3">
                     <Badge event={g.event_type} />
+                  </td>
+                  <td className="px-4 py-3">
+                    <RegisteredAt iso={g.created_at} />
                   </td>
                   <td className="px-4 py-3">
                     <Details guest={g} />
