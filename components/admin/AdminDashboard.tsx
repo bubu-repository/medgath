@@ -102,12 +102,39 @@ function Details({ guest }: { guest: Guest }) {
   );
 }
 
+// A picker gives "2026-08-07"; the export needs the absolute instant that
+// local day starts. Building the Date from parts (not Date.parse) keeps it in
+// the organiser's own zone, where a bare "2026-08-07" would be read as UTC.
+function localDayStart(day: string): string | null {
+  const [y, m, d] = day.split("-").map(Number);
+  if (!y || !m || !d) return null;
+  return new Date(y, m - 1, d, 0, 0, 0, 0).toISOString();
+}
+
+// End of the picked day, exclusive: midnight at the start of the next day.
+function localDayEnd(day: string): string | null {
+  const [y, m, d] = day.split("-").map(Number);
+  if (!y || !m || !d) return null;
+  return new Date(y, m - 1, d + 1, 0, 0, 0, 0).toISOString();
+}
+
+// Local YYYY-MM-DD for a timestamp, for seeding the pickers from real data.
+function localDay(iso: string): string {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 export default function AdminDashboard() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -127,6 +154,67 @@ export default function AdminDashboard() {
   useEffect(() => {
     load();
   }, [load]);
+
+  // Seed the range to span every registration, so the default export is
+  // "everyone" and narrowing it is the deliberate act.
+  useEffect(() => {
+    if (!guests.length || from || to) return;
+    const days = guests.map((g) => localDay(g.created_at)).sort();
+    setFrom(days[0]);
+    setTo(days[days.length - 1]);
+  }, [guests, from, to]);
+
+  // What the export will actually contain, computed from the same rules the
+  // server applies, so the count on the button is not a guess.
+  const exportable = useMemo(() => {
+    const start = from ? localDayStart(from) : null;
+    const end = to ? localDayEnd(to) : null;
+    return guests.filter((g) => {
+      if (filter !== "all" && g.event_type !== filter) return false;
+      if (start && g.created_at < start) return false;
+      if (end && g.created_at >= end) return false;
+      return true;
+    });
+  }, [guests, filter, from, to]);
+
+  const rangeInvalid = Boolean(from && to && from > to);
+
+  async function runExport() {
+    if (rangeInvalid) return;
+    setExporting(true);
+    setExportError("");
+    try {
+      const params = new URLSearchParams();
+      if (filter !== "all") params.set("event", filter);
+      const start = from ? localDayStart(from) : null;
+      const end = to ? localDayEnd(to) : null;
+      if (start) params.set("from", start);
+      if (end) params.set("to", end);
+      params.set("tz", Intl.DateTimeFormat().resolvedOptions().timeZone);
+
+      const res = await fetch(`/api/admin/export?${params}`);
+      if (!res.ok) {
+        const msg = await res.json().catch(() => null);
+        setExportError(msg?.error ?? "Export failed. Please try again.");
+        return;
+      }
+      const blob = await res.blob();
+      const name =
+        res.headers
+          .get("Content-Disposition")
+          ?.match(/filename="(.+?)"/)?.[1] ?? "bubu30-guestlist.xlsx";
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = href;
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(href);
+    } catch {
+      setExportError("Network error. Please try again.");
+    } finally {
+      setExporting(false);
+    }
+  }
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -268,6 +356,94 @@ export default function AdminDashboard() {
           Refresh
         </button>
       </div>
+
+      {/* Export. The range picks by registration date and follows whichever
+          event tab is active, so what you see is what you get. */}
+      <section className="glass mt-4 rounded-2xl p-4">
+        <div className="flex flex-wrap items-end gap-3">
+          <div>
+            <label
+              htmlFor="export-from"
+              className="mb-1 block text-[10px] uppercase tracking-[0.3em] text-ink/60"
+            >
+              Registered from
+            </label>
+            <input
+              id="export-from"
+              type="date"
+              value={from}
+              max={to || undefined}
+              onChange={(e) => setFrom(e.target.value)}
+              className="rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm
+                         outline-none transition-[border-color,box-shadow] duration-200
+                         ease-out focus:border-ink focus:ring-2 focus:ring-ink/15"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="export-to"
+              className="mb-1 block text-[10px] uppercase tracking-[0.3em] text-ink/60"
+            >
+              Until
+            </label>
+            <input
+              id="export-to"
+              type="date"
+              value={to}
+              min={from || undefined}
+              onChange={(e) => setTo(e.target.value)}
+              className="rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm
+                         outline-none transition-[border-color,box-shadow] duration-200
+                         ease-out focus:border-ink focus:ring-2 focus:ring-ink/15"
+            />
+          </div>
+
+          <button
+            onClick={runExport}
+            disabled={exporting || rangeInvalid || exportable.length === 0}
+            aria-busy={exporting}
+            className="press ring-focus rounded-lg bg-ink px-5 py-2.5 text-sm font-semibold
+                       text-paper transition-[background-color] duration-200 ease-out
+                       hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {exporting
+              ? "Building…"
+              : `Export ${exportable.length} to Excel`}
+          </button>
+
+          {(from || to) && (
+            <button
+              onClick={() => {
+                setFrom("");
+                setTo("");
+              }}
+              className="press ring-focus rounded-lg px-2 py-2.5 text-sm font-medium
+                         text-ink/70 transition-[color] duration-200 ease-out hover:text-ink"
+            >
+              All dates
+            </button>
+          )}
+        </div>
+
+        <p className="mt-2 text-xs text-ink/60">
+          {rangeInvalid
+            ? "The start date is after the end date."
+            : `Includes the QR image, ticket code and contact details for ${
+                filter === "all"
+                  ? "both events"
+                  : tabs.find((t) => t.key === filter)?.label
+              }. Dates are inclusive.`}
+        </p>
+
+        {exportError && (
+          <p
+            role="alert"
+            className="mt-2 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700"
+          >
+            {exportError}
+          </p>
+        )}
+      </section>
 
       {error && (
         <p
